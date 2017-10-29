@@ -45,8 +45,13 @@ class CherryTreeSuite extends FlatSpec with PropertyChecks with Matchers {
     } else an[IndexOutOfBoundsException] should be thrownBy tree(i)
   }
 
-  it should "concat elements" in forAll { (xs: List[Int], ys: List[Int]) =>
+  it should "concat int elements" in forAll { (xs: List[Int], ys: List[Int]) =>
     CherryTree(xs: _*) concat CherryTree(ys: _*) shouldBe CherryTree(xs ++ ys: _*)
+  }
+
+  it should "concat different elements" in forAll { (xs: List[Int], ys: List[String]) =>
+    CherryTree(xs: _*) concat CherryTree(ys: _*) shouldBe CherryTree(xs ++ ys: _*)
+    CherryTree(ys: _*) concat CherryTree(xs: _*) shouldBe CherryTree(ys ++ xs: _*)
   }
 
   it should "get correct size" in forAll { (xs: Vector[Int]) =>

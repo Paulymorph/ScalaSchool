@@ -136,10 +136,10 @@ final case class CherryBranch[+T](left: Node[T], inner: CherryTree[Node2[T]], ri
   }
 
   override def concat[S >: T](xs: CherryTree[S]) =
-  //    if (this.size > xs.size)
-  //      xs.foldLeft(this)((acc, i) => acc.append(i))
-  //    else
-    this.foldRight(xs)((i, acc) => acc.prepend(i))
+    if (this.size > xs.size)
+      xs.foldLeft(this.asInstanceOf[CherryTree[S]])((acc, i) => acc.append(i))
+    else
+      this.foldRight(xs)((i, acc) => acc.prepend(i))
 
   override def init = right match {
     case Node1(_) =>
