@@ -1,7 +1,7 @@
 package lectures.collections
 
 import org.scalatest.prop.PropertyChecks
-import org.scalatest.{FlatSpec, Matchers, PropSpec}
+import org.scalatest.{FlatSpec, Matchers}
 
 class CherryTreeSuite extends FlatSpec with PropertyChecks with Matchers {
   "Cherry tree" should "append element" in forAll { (x: Int, xs: Vector[Int]) =>
@@ -39,10 +39,10 @@ class CherryTreeSuite extends FlatSpec with PropertyChecks with Matchers {
   }
 
   it should "get element by index" in forAll { (xs: Vector[Int], i: Int) =>
-    whenever(i < xs.size && i >= 0) {
-      val tree = CherryTree(xs: _*)
+    val tree = CherryTree(xs: _*)
+    if (i < xs.size && i >= 0) {
       tree(i) shouldBe xs(i)
-    }
+    } else an[IndexOutOfBoundsException] should be thrownBy tree(i)
   }
 
   it should "concat elements" in forAll { (xs: List[Int], ys: List[Int]) =>
@@ -51,5 +51,10 @@ class CherryTreeSuite extends FlatSpec with PropertyChecks with Matchers {
 
   it should "get correct size" in forAll { (xs: Vector[Int]) =>
     CherryTree(xs: _*).size shouldBe xs.size
+  }
+
+  it should "fold left correctly" in forAll { (x: List[Int], i: Int) =>
+    CherryTree(x: _*).foldLeft(i)(_ - _) shouldBe x.foldLeft(i)(_ - _)
+    CherryTree(x: _*).foldLeft(i)(_ + _) shouldBe x.foldLeft(i)(_ + _)
   }
 }
